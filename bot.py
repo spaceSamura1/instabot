@@ -6,6 +6,7 @@ from random import randint
 import pandas as pd 
 from keys import insta_user, insta_pw
 
+
 #====================================
 #Log in to instagram
 #====================================
@@ -20,6 +21,7 @@ username = webdriver.find_element_by_name('username')
 username.send_keys(insta_user)
 password = webdriver.find_element_by_name('password')
 password.send_keys(insta_pw)
+sleep(2)
 
 button_login = webdriver.find_element_by_css_selector('#react-root > section > main > div > article > div > div:nth-child(1) > div > form > div:nth-child(4) > button > div')
 button_login.click()
@@ -32,7 +34,7 @@ not_now.click()
 #Create hashtag list and CSV for user log
 #====================================
 
-hashtag_list = ['brandadvertising', 'experiential', 'experientialdesign', 'marketing' 'experientialart', 'experientialevents']
+hashtag_list = ['instaquote', 'inspiringquotes', 'quoteoftheday', 'quotesdaily', 'quoteslover']
 
 prev_user_list = [] #users followed
 
@@ -45,72 +47,68 @@ prev_user_list = [] #users followed
 #====================================
 
 new_followed = []
-tag = -1
+tag = 0
 followed = 0
 likes = 0
 comments = 0
 
 for hashtag in hashtag_list:
-    tag += 1
     webdriver.get('https://www.instagram.com/explore/tags/' + hashtag_list[tag] + '/')
     sleep(5)
     first_thumbnail = webdriver.find_element_by_xpath('//*[@id="react-root"]/section/main/article/div[1]/div/div/div[1]/div[1]/a/div')
     first_thumbnail.click()
     sleep(randint(1,2))
-   
-    try:
-        for x in range(1,10):
-            username = webdriver.find_element_by_css_selector('body > div._2dDPU.vCf6V > div.zZYga > div > article > header > div.o-MQd > div.PQo_0 > div.e1e1d > h2 > a').text
+    count = 0
+    for x in range(1,10):
+        sleep(3) 
+        #sleep necessary b/c this it is searching for username before the page is rendered
 
-            #follow user
-            if username not in prev_user_list:
-                if webdriver.find_element_by_css_selector('body > div._2dDPU.vCf6V > div.zZYga > div > article > header > div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.bY2yH > button').text == 'Follow':
-                    webdriver.find_element_by_css_selector('body > div._2dDPU.vCf6V > div.zZYga > div > article > header > div.o-MQd.z8cbW > div.PQo_0.RqtMr > div.bY2yH > button').click()
+        username = webdriver.find_element_by_css_selector('body > div._2dDPU.vCf6V > div.zZYga > div > article > header > div.o-MQd > div.PQo_0 > div.e1e1d > h2 > a').text
+        print(username)
+        
+        #follow user if not already following
+        if username not in prev_user_list:
+            if webdriver.find_element_by_xpath('/html/body/div[3]/div[2]/div/article/header/div[2]/div[1]/div[2]/button').text == 'Follow':
+                                                       
+                webdriver.find_element_by_xpath('/html/body/div[3]/div[2]/div/article/header/div[2]/div[1]/div[2]/button').click()
 
-                    new_followed.append(username)
-                    followed += 1
+                new_followed.append(username)
+                followed += 1
 
                 #like the image
                 heart_button = webdriver.find_element_by_css_selector('body > div._2dDPU.vCf6V > div.zZYga > div > article > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > span')
                 heart_button.click()
                 likes += 1
-                sleep(randint(1,10))
+                sleep(randint(1,5))
 
-                #Comments
+                #comment
+                webdriver.find_element_by_css_selector('body > div._2dDPU.vCf6V > div.zZYga > div > article > div.eo2As > section.sH9wk._JgwE > div > form').click()
+                comment_box = webdriver.find_element_by_css_selector('body > div._2dDPU.vCf6V > div.zZYga > div > article > div.eo2As > section.sH9wk._JgwE > div > form > textarea')
+
                 comm_prob = randint(1,10)
-                print(f'{hashtag}_{x}:{comm_prob}')
+                print(f'{hashtag}_{x}: {comm_prob}')
                 if comm_prob > 7:
-                    comments += 1
-                    webdriver.find_element_by_css_selector('body > div._2dDPU.vCf6V > div.zZYga > div > article > div.eo2As > section.sH9wk._JgwE > div > form').click()
-                    comment_box = webdriver.find_element_by_xpath('body > div._2dDPU.vCf6V > div.zZYga > div > article > div.eo2As > section.sH9wk._JgwE > div > form > textarea')
+                    comment_box.send_keys('This is beautifully said!')
+                elif (comm_prob < 7) and comm_prob > 4:
+                    comment_box.send_keys('This quote definitely just made my day!')
+                else:
+                    comment_box.send_keys('Truth like this you can always just feel!')
+                
+                comment_box.send_keys(Keys.ENTER)
+                comments += 1
+                sleep(randint(5,10))
 
-                    if(comm_prob < 7):
-                        comment_box.send_keys('This is beautiful, really well done!')
-                        sleep(1)
-                    elif(comm_prob > 6) and (comm_prob < 9):
-                        comment_box.send_keys('I love this! Definitely stopped me on my scroll haha')
-                        sleep(1)
-                    elif comm_prob == 9:
-                        comment_box.send_keys('Very nicely done, great execution!')
-                    elif comm_prob == 10:
-                        comment_box.send_keys('Very artisic! The colors here are so beautiful')
-                    
-                    comment_box.send_keys(Keys.ENTER)
-                    sleep(randint(22,28))
-            
-                webdriver.find_element_by_link_text('Next').click()
-                sleep(randint(25,29))
-            else:
-                webdriver.find_element_by_link_text('Next').click()
-                sleep(randint(20,26))
-    except:
-        continue
+
+        # count += 1
+        webdriver.find_element_by_link_text('Next').click()
+    tag += 1
+
 
 for n in range(0, len(new_followed)):
     prev_user_list.append(new_followed[n])
 
 updated_user_df = pd.DataFrame(prev_user_list)
-updated_user_df.to_csv(f'{strftime("%Y%m%d-%H%M%S")}_users_followed_list.csv')
+updated_user_df.to_csv(f'{strftime("%Y-%m-%d-%H:%M")}_users_followed_list.csv')
 print(f'Liked {likes} photos')
 print(f'Commented on {comments} images')
 print(f'Followed {new_followed} new users')
