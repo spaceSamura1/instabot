@@ -11,26 +11,29 @@ from keys import insta_user, insta_pw
 #====================================
 #Login to instagram
 #====================================
+
 chromedriver_path = '/Users/tylerceja/Downloads/chromedriver'
 webdriver = webdriver.Chrome(executable_path=chromedriver_path)
 
-sleep(2)
-webdriver.get('https://www.instagram.com/accounts/login/?source=auth_switcher')
-sleep(3)
+def login():
+    sleep(2)
+    webdriver.get('https://www.instagram.com/accounts/login/?source=auth_switcher')
+    sleep(3)
 
-username = webdriver.find_element_by_name('username')
-username.send_keys(insta_user)
-password = webdriver.find_element_by_name('password')
-password.send_keys(insta_pw)
-sleep(2)
+    username = webdriver.find_element_by_name('username')
+    username.send_keys(insta_user)
+    password = webdriver.find_element_by_name('password')
+    password.send_keys(insta_pw)
+    sleep(2)
 
-button_login = webdriver.find_element_by_css_selector('#react-root > section > main > div > article > div > div:nth-child(1) > div > form > div:nth-child(4) > button > div')
-button_login.click()
-sleep(3)
+    button_login = webdriver.find_element_by_css_selector('#react-root > section > main > div > article > div > div:nth-child(1) > div > form > div:nth-child(4) > button > div')
+    button_login.click()
+    sleep(3)
 
-#exits pop up notification
-not_now = webdriver.find_element_by_css_selector('body > div.RnEpo.Yx5HN > div > div > div.mt3GC > button.aOOlW.HoLwm')
-not_now.click()
+    #exits pop up notification
+    not_now = webdriver.find_element_by_css_selector('body > div.RnEpo.Yx5HN > div > div > div.mt3GC > button.aOOlW.HoLwm')
+    not_now.click()
+login()
 
 #====================================
 #Create hashtag list and CSV for user log
@@ -92,6 +95,7 @@ for hashtag in hashtag_list:
                 
                 print(f'{hashtag}_{x}: {comm_prob}')
 
+                #choose a random comment from text list
                 comment_box.send_keys(text[comm_prob])
 
                 comment_box.send_keys(Keys.ENTER)
