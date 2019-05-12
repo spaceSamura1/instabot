@@ -116,8 +116,10 @@ class Bot:
 
 new_bot = Bot(insta_user, insta_pw)
 new_bot.login()
-new_bot.run_bot(30)
-new_bot.create_csv_log()
+
+if __name__ == '__main__':
+    new_bot.run_bot(30)
+    new_bot.create_csv_log()
 
 #====================================
 #Create hashtag list and CSV for user log
