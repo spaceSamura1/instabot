@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep, strftime
-import time
 from random import randint
 import pandas as pd 
 from keys import insta_user, insta_pw
