@@ -7,9 +7,10 @@ import pandas as pd
 from keys import insta_user, insta_pw
 
 
+chromedriver_path = '/Users/tylerceja/Downloads/chromedriver'
+driver = webdriver.Chrome(executable_path=chromedriver_path)
+
 class Bot:
-    chromedriver_path = '/Users/tylerceja/Downloads/chromedriver'
-    driver = webdriver.Chrome(executable_path=chromedriver_path)
     prev_user_list = [] #users followed
     new_followed = []
     followed = 0
@@ -21,7 +22,6 @@ class Bot:
         self.password = password
 
     def login(self):
-        driver = self.driver
         driver.get('https://www.instagram.com/accounts/login/?source=auth_switcher')
         sleep(3)
 
@@ -29,6 +29,7 @@ class Bot:
         username.send_keys(self.handle)
         password = driver.find_element_by_name('password')
         password.send_keys(self.password)
+        sleep(3)
                 
         button_login = driver.find_element_by_css_selector('#react-root > section > main > div > article > div > div:nth-child(1) > div > form > div:nth-child(4) > button > div')
         button_login.click()
@@ -38,9 +39,8 @@ class Bot:
         not_now = driver.find_element_by_xpath('/html/body/div[3]/div/div/div[3]/button[2]')
         not_now.click()
 
-
+    
     def run_bot(self, num_posts):
-        driver = self.driver
         prev_user_list = self.prev_user_list
         new_followed = self.new_followed
         followed = self.followed
