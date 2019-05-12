@@ -1,5 +1,5 @@
 # Instabot
-Instagrom bot to like, follow, and comment on users
+Instagram bot to like, follow, and comment on users
 
 This instagram bot will go through specified hashtag lists and follow, like, and comment on users whom you dont already follow.
 
