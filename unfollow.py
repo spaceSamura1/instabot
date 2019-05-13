@@ -10,9 +10,11 @@ unfollow_bot = Bot(insta_user, insta_pw)
 
 driver.get(f'https://www.instagram.com/{insta_user}')
 
-following = driver.find_element_by_css_selector('#react-root > section > main > div > header > section > ul > li:nth-child(3) > a')
-following.click()
-sleep(3)
+def access_following_list():
+    following = driver.find_element_by_css_selector('#react-root > section > main > div > header > section > ul > li:nth-child(3) > a')
+    following.click()
+    sleep(3)
+access_following_list()
 
 with open('2019-05-10-22:58_users_followed_list.csv') as file:
     csv_reader = reader(file)
@@ -22,7 +24,7 @@ with open('2019-05-10-22:58_users_followed_list.csv') as file:
     
     unfollowed = 0
 
-    for x in range(1, len(followed_list)):
+    for x in range(1, 30):
         username = driver.find_element_by_css_selector('body > div.RnEpo.Yx5HN > div > div.isgrP > ul > div > li:nth-child(1) > div > div.t2ksc > div.enpQJ > div.d7ByH > a').text
         if username in followed_list:
             unfollow = driver.find_element_by_css_selector(f'body > div.RnEpo.Yx5HN > div > div.isgrP > ul > div > li:nth-child({x}) > div > div.Pkbci > button')
@@ -32,11 +34,12 @@ with open('2019-05-10-22:58_users_followed_list.csv') as file:
             confirm.click()
             sleep(4)
             unfollowed += 1
+            close = driver.find_element_by_css_selector('body > div.RnEpo.Yx5HN > div > div:nth-child(1) > div > div:nth-child(3) > button > span')
+            close.click() 
+            access_following_list()
+            print(f'unfollowed {unfollowed} users')
     
-    close = driver.find_element_by_css_selector('body > div.RnEpo.Yx5HN > div > div:nth-child(1) > div > div:nth-child(3) > button > span')
-    close.click()
-    
-    print(f'unfollowed {unfollowed} users')
+
 
 
         
